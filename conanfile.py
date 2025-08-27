@@ -14,7 +14,7 @@ class IdentiqueRatioDemo(ConanFile):
         "tensorflow-lite/2.15.0",
     )
 
-    
+
     tool_requires = (
         "cmake/3.29.3",
         "ninja/1.11.1",
@@ -23,20 +23,22 @@ class IdentiqueRatioDemo(ConanFile):
 
     generators = ("CMakeDeps", "CMakeToolchain")
 
-  
+
     default_options = {
         # --- global ---
-        "*:shared": False,                     
+        "*:shared": False,
 
         # --- OpenCV ---
         "opencv/*:contrib": False,
         "opencv/*:nonfree": False,
-        "opencv/*:world":   False,             
-        "opencv/*:with_gtk": True,             
-        "opencv/*:with_ffmpeg": False,         
+        "opencv/*:world":   False,
+        "opencv/*:with_gtk": True,
+        "opencv/*:with_qt": True,
+        "opencv/*:with_ffmpeg": False,
         "opencv/*:with_gstreamer": False,
-        "opencv/*:with_jpeg": False,
-        "opencv/*:with_png": False,
+        "opencv/*:with_v4l": True,
+        "opencv/*:with_jpeg": "libjpeg-turbo",
+        "opencv/*:with_png": True,
         "opencv/*:with_tiff": False,
         "opencv/*:with_openexr": False,
         "opencv/*:with_opencl": False,
@@ -50,16 +52,18 @@ class IdentiqueRatioDemo(ConanFile):
         "zxing-cpp/*:fuzzers":         False,
 
         # --- TensorFlow Lite ---
-        "tensorflow-lite/*:xnnpack": True,     
+        "tensorflow-lite/*:xnnpack": True,
         "tensorflow-lite/*:ruy":      False,
         "tensorflow-lite/*:eigen":    False,
         "tensorflow-lite/*:fp16":     False,
     }
 
-    
+    def requirements(self):
+        self.requires("libpng/1.6.42", override=True)
+
     def layout(self):
         cmake_layout(self)
 
-   
+
     def package_info(self):
         self.cpp_info.system_libs = ["dl", "pthread"]
