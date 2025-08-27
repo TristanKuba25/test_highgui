@@ -61,7 +61,8 @@ jobs:
             libc6-arm64-cross libc6-dev-arm64-cross \
             libgcc-s1-arm64-cross libstdc++6-arm64-cross \
             libv4l-dev:arm64 \
-            qt6-base-dev:arm64 qt6-base-dev-tools \
+            libgtk-3-dev:arm64 libglib2.0-dev:arm64 libgdk-pixbuf2.0-dev:arm64 \
+            libpango1.0-dev:arm64 libcairo2-dev:arm64 \
             ninja-build cmake pkg-config fakeroot dpkg-dev
 
             python3 -m pip install --upgrade "conan~=2.2" ninja
@@ -84,8 +85,8 @@ jobs:
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
             -o opencv/*:highgui=True \
-            -o opencv/*:with_gtk=False \
-            -o opencv/*:with_qt=True \
+            -o opencv/*:with_gtk=True \
+            -o opencv/*:with_qt=False \
             -o opencv/*:with_v4l=True \
             -o opencv/*:with_ffmpeg=False \
             -o opencv/*:with_gstreamer=False \
