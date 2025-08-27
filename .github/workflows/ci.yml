@@ -17,21 +17,29 @@ jobs:
       - name: Install cross toolchain & deps (ARM64 + Qt6)
         shell: bash
         run: |
-          set -e
-          sudo dpkg --add-architecture arm64
-          CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
-          sudo sed -i 's/^deb \(\[[^]]*\] \)\?/deb [arch=amd64] /' /etc/apt/sources.list
+            set -e
+            sudo dpkg --add-architecture arm64
+            CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
 
-          printf "%s\n" \
-            "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME} main restricted universe multiverse" \
-            "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-updates main restricted universe multiverse" \
-            "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-security main restricted universe multiverse" \
-            "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-backports main restricted universe multiverse" \
-            | sudo tee /etc/apt/sources.list.d/ubuntu-ports-arm64.list >/dev/null
+            sudo bash -c "cat > /etc/apt/sources.list" <<EOF
+            deb [arch=amd64] http://archive.ubuntu.com/ubuntu ${CODENAME} main restricted universe multiverse
+            deb [arch=amd64] http://archive.ubuntu.com/ubuntu ${CODENAME}-updates main restricted universe multiverse
+            deb [arch=amd64] http://security.ubuntu.com/ubuntu ${CODENAME}-security main restricted universe multiverse
+            deb [arch=amd64] http://archive.ubuntu.com/ubuntu ${CODENAME}-backports main restricted universe multiverse
+            EOF
 
-          sudo apt-get update
+            sudo find /etc/apt/sources.list.d -name "*.list" -exec sudo sed -i 's/^deb \(\[[^]]*\] \)\?/deb [arch=amd64] /' {} +
 
-          sudo apt-get install -y \
+            sudo bash -c "cat > /etc/apt/sources.list.d/ubuntu-ports-arm64.list" <<EOF
+            deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME} main restricted universe multiverse
+            deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-updates main restricted universe multiverse
+            deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-security main restricted universe multiverse
+            deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-backports main restricted universe multiverse
+            EOF
+
+            sudo apt-get update
+
+            sudo apt-get install -y \
             gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
             libc6-arm64-cross libc6-dev-arm64-cross \
             libgcc-s1-arm64-cross libstdc++6-arm64-cross \
@@ -39,8 +47,9 @@ jobs:
             qt6-base-dev:arm64 qt6-base-dev-tools \
             ninja-build cmake pkg-config fakeroot dpkg-dev
 
-          python3 -m pip install --upgrade "conan~=2.2" ninja
-          conan remote add --force conancenter https://center2.conan.io
+            python3 -m pip install --upgrade "conan~=2.2" ninja
+            conan remote add --force conancenter https://center2.conan.io
+
 
 
       - uses: actions/cache@v4
