@@ -1,0 +1,72 @@
+name: identique_ratio-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+env:
+  CONAN_USER_HOME: ~/.conan2
+
+jobs:
+  build_arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cross toolchain & deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+           gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
+           libc6-arm64-cross libc6-dev-arm64-cross \
+           libgcc-s1-arm64-cross \
+           libstdc++6-arm64-cross libstdc++-13-dev-arm64-cross \
+           ninja-build cmake dpkg-dev fakeroot
+          pip3 install --upgrade "conan~=2.2" cmake ninja
+          conan remote add --force conancenter https://center2.conan.io
+      - uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
+
+      - name: Conan install
+        run: |
+          conan profile detect --force
+          conan install . -of build/arm-headless \
+            -pr:b profiles/default \
+            -pr:h profiles/imx8mpevk \
+            -s:h build_type=Release \
+            -o opencv/*:highgui=True \
+            -o opencv/*:with_gtk=False \
+            -o opencv/*:with_qt=False \
+            -o opencv/*:with_v4l=True \
+            -o opencv/*:with_ffmpeg=False \
+            -o opencv/*:with_gstreamer=False \
+            -o opencv/*:with_jpeg=libjpeg-turbo \
+            -o opencv/*:with_png=True \
+            -c:h tools.system.package_manager:mode=install \
+            -c:h tools.system.package_manager:sudo=True \
+            --build=missing
+      - name: Cmake
+        run: |
+          cmake -S . -B build/arm -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=build/arm-headless/build/Release/generators/conan_toolchain.cmake \
+            -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build/arm --parallel
+
+      - name: Verify ELF
+        run: file build/arm/identique_ratio
+
+
+
+      - name: Generate Debian package
+        working-directory: build/arm
+        run: |
+          cpack -G DEB -C Release
+      - name: Upload Debian package
+        uses: actions/upload-artifact@v4
+        with:
+          name: identique_ratio-deb-${{ github.sha }}
+          path: build/arm/*.deb

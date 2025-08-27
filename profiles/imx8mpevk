@@ -1,0 +1,19 @@
+[settings]
+os              = Linux
+arch            = armv8
+build_type      = Release
+compiler        = gcc
+compiler.version= 13.3
+compiler.cppstd = gnu17
+compiler.libcxx = libstdc++11
+[conf]
+tools.build:compiler_executables={"c":"/usr/bin/aarch64-linux-gnu-gcc","cpp":"/usr/bin/aarch64-linux-gnu-g++","ar":"/usr/bin/aarch64-linux-gnu-gcc-ar","ranlib":"/usr/bin/aarch64-linux-gnu-gcc-ranlib","strip":"/usr/bin/aarch64-linux-gnu-strip"}
+
+tools.cmake.cmaketoolchain:system_name=Linux
+tools.cmake.cmaketoolchain:system_processor=aarch64
+
+tools.gnu:host_triplet=aarch64-linux-gnu
+
+tools.system.package_manager:mode=disabled
+
+
