@@ -16,6 +16,16 @@ jobs:
 
       - name: Install cross toolchain & deps
         run: |
+        set -e
+        sudo dpkg --add-architecture arm64
+        CODENAME="$(. /etc/os-release && echo $VERSION_CODENAME)"
+        sudo tee /etc/apt/sources.list.d/ubuntu-ports-arm64.list >/dev/null <<EOF
+    deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME} main restricted universe multiverse
+    deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-updates main restricted universe multiverse
+    deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-security main restricted universe multiverse
+    deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports ${CODENAME}-backports main restricted universe multiverse
+    EOF
+
           sudo apt-get update
           sudo apt-get install -y \
            gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
