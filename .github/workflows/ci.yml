@@ -22,11 +22,15 @@ jobs:
            libc6-arm64-cross libc6-dev-arm64-cross \
            libgcc-s1-arm64-cross \
            libstdc++6-arm64-cross libstdc++-13-dev-arm64-cross \
-           libgtk-3-dev:arm64 libglib2.0-dev:arm64 libgdk-pixbuf2.0-dev:arm64 \
-           libpango1.0-dev:arm64 libcairo2-dev:arm64 pkg-config \
+           qt6-base-dev:arm64 qt6-base-dev-tools:arm64
            ninja-build cmake dpkg-dev fakeroot
           pip3 install --upgrade "conan~=2.2" cmake ninja
           conan remote add --force conancenter https://center2.conan.io
+
+
+
+
+
       - uses: actions/cache@v4
         with:
           path: ~/.conan2
@@ -39,9 +43,9 @@ jobs:
             -pr:b profiles/default \
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
-            -o opencv/*:highgui=False \
+            -o opencv/*:highgui=True \
             -o opencv/*:with_gtk=False \
-            -o opencv/*:with_qt=False \
+            -o opencv/*:with_qt=True \
             -o opencv/*:with_v4l=True \
             -o opencv/*:with_ffmpeg=False \
             -o opencv/*:with_gstreamer=False \
@@ -50,6 +54,7 @@ jobs:
             -c:h tools.system.package_manager:mode=install \
             -c:h tools.system.package_manager:sudo=True \
             --build=missing
+
       - name: Cmake
         run: |
           cmake -S . -B build/arm -G Ninja \
