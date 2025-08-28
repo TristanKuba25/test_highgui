@@ -33,7 +33,7 @@ class IdentiqueRatioDemo(ConanFile):
         "opencv/*:nonfree": False,
         "opencv/*:world":   False,
         "opencv/*:with_gtk": True,
-        "opencv/*:with_qt": True,
+        "opencv/*:with_qt": False,
         "opencv/*:with_ffmpeg": False,
         "opencv/*:with_gstreamer": False,
         "opencv/*:with_v4l": True,
