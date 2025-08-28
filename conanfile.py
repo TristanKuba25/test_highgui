@@ -46,7 +46,7 @@ class IdentiqueRatioDemo(ConanFile):
         "opencv/*:with_quirc": False,
         "opencv/*:with_eigen": False,
         "opencv/*:with_ipp": False,
-
+        "opencv/*:with_wayland": False,
         # --- ZXing‑cpp ---
         "zxing-cpp/*:build_examples": False,
         "zxing-cpp/*:build_tests":     False,

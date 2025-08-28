@@ -115,6 +115,7 @@ jobs:
             -o gtk/*:version=3 \
             -o xkbcommon/*:with_wayland=False \
             -o xkbcommon/*:with_x11=False \
+            -o opencv/*:with_wayland=False \
             --format=dot > build/graph.dot
 
           if grep -i "wayland" build/graph.dot; then
@@ -136,6 +137,7 @@ jobs:
             -o opencv/*:with_png=True \
             -o xkbcommon/*:with_wayland=False \
             -o xkbcommon/*:with_x11=False \
+            -o opencv/*:with_wayland=False \
             -o gtk/*:version=3 \
             -c:h tools.system.package_manager:mode=install \
             -c:h tools.system.package_manager:sudo=True \
