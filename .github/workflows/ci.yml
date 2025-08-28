@@ -100,6 +100,27 @@ jobs:
           conan remove "gtk/*" -c || true
           conan remove "xkbcommon/*" -c || true
 
+          mkdir -p build
+          conan graph info . \
+            -pr:b profiles/default \
+            -pr:h profiles/imx8mpevk \
+            -s:h build_type=Release \
+            -o opencv/*:with_gtk=True \
+            -o opencv/*:with_qt=False \
+            -o opencv/*:with_v4l=True \
+            -o opencv/*:with_ffmpeg=False \
+            -o opencv/*:with_gstreamer=False \
+            -o opencv/*:with_jpeg=libjpeg-turbo \
+            -o opencv/*:with_png=True \
+            -o gtk/*:version=3 \
+            -o xkbcommon/*:with_wayland=False \
+            -o xkbcommon/*:with_x11=False \
+            --format=dot > build/graph.dot
+
+          if grep -i "wayland" build/graph.dot; then
+            echo "::error::Wayland est encore dans le graphe (voir build/graph.dot)"
+            exit 1
+          fi
 
           conan install . -of build/arm-headless \
             -pr:b profiles/default \
@@ -118,7 +139,6 @@ jobs:
             -o gtk/*:version=3 \
             -c:h tools.system.package_manager:mode=install \
             -c:h tools.system.package_manager:sudo=True \
-            -c:h tools.cmake.cmaketoolchain:extra_defines=["WITH_WAYLAND=OFF"] \
             --build=missing
 
       - name: Cmake
