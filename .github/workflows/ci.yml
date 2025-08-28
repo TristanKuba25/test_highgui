@@ -78,12 +78,12 @@ jobs:
           key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
       
       - name: Check pkg-config (gtk/v4l2) for ARM64
-          env:
-            PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-            PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          run: |
-            pkg-config --print-errors --modversion gtk+-3.0
-            pkg-config --print-errors --modversion v4l2
+        env:
+          PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+        run: |
+          pkg-config --print-errors --modversion gtk+-3.0
+          pkg-config --print-errors --modversion v4l2
 
 
       - name: Conan install
