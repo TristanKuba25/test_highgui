@@ -9,10 +9,10 @@
 #include <opencv2/opencv.hpp>
 
 // ZXing-C++ 
-#include <BarcodeFormat.h>
-#include <ReadBarcode.h>
-#include <Result.h>
-#include <ImageView.h>
+#include <ZXing/BarcodeFormat.h>
+#include <ZXing/ReadBarcode.h>
+#include <ZXing/Result.h>
+#include <ZXing/ImageView.h>
 
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
