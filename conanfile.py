@@ -13,8 +13,6 @@ class IdentiqueRatioDemo(ConanFile):
         "zxing-cpp/2.3.0",
         "tensorflow-lite/2.15.0",
         "gtk/system",
-        "wayland/system",
-        "xkbcommon/system",
     )
 
 
@@ -63,8 +61,8 @@ class IdentiqueRatioDemo(ConanFile):
     }
 
     def requirements(self):
-        self.requires("libpng/1.6.42", override=True)
-
+        self.requires("wayland/system",   override=True)
+        self.requires("xkbcommon/system", override=True)
     def layout(self):
         cmake_layout(self)
 
