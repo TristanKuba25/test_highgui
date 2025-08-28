@@ -56,6 +56,7 @@ class IdentiqueRatioDemo(ConanFile):
         "tensorflow-lite/*:ruy":      False,
         "tensorflow-lite/*:eigen":    False,
         "tensorflow-lite/*:fp16":     False,
+        "gtk/*:version": 3,
     }
 
     def requirements(self):

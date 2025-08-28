@@ -78,6 +78,9 @@ jobs:
           key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
 
       - name: Conan install
+        env:
+          PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
         run: |
           conan profile detect --force
           conan install . -of build/arm-headless \
@@ -92,6 +95,7 @@ jobs:
             -o opencv/*:with_gstreamer=False \
             -o opencv/*:with_jpeg=libjpeg-turbo \
             -o opencv/*:with_png=True \
+            -o gtk/*:version=3 \
             -c:h tools.system.package_manager:mode=install \
             -c:h tools.system.package_manager:sudo=True \
             --build=missing
