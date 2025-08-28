@@ -9,7 +9,6 @@ find_package(tensorflowlite REQUIRED CONFIG)
 
 find_package(Threads REQUIRED)          # pthread
 #find_library(DL_LIB dl REQUIRED)        # dlopen/dlsym
-target_link_options(identique_ratio PRIVATE -Wl,--exclude-libs,ALL)
 add_executable(identique_ratio src/identique_ratio.cpp)
 
 target_link_libraries(identique_ratio PRIVATE
@@ -23,7 +22,7 @@ target_link_libraries(identique_ratio PRIVATE
     Threads::Threads
     ${CMAKE_DL_LIBS}
 )
-
+target_link_options(identique_ratio PRIVATE -Wl,--exclude-libs,ALL)
 include(InstallRequiredSystemLibraries)
 set(CPACK_GENERATOR DEB)
 set(CPACK_PACKAGE_NAME    "identique-ratio")
