@@ -13,6 +13,8 @@ class IdentiqueRatioDemo(ConanFile):
         "zxing-cpp/2.3.0",
         "tensorflow-lite/2.15.0",
         "gtk/system",
+        "wayland/system",
+        "xkbcommon/system",
     )
 
 
