@@ -83,7 +83,7 @@ jobs:
           PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
         run: |
           pkg-config --print-errors --modversion gtk+-3.0
-          pkg-config --print-errors --modversion v4l2
+          pkg-config --print-errors --modversion libv4l2
 
 
       - name: Conan install
@@ -134,6 +134,7 @@ jobs:
         with:
           name: identique_ratio-deb-${{ github.sha }}
           path: build/arm/*.deb
+
 
 
 
