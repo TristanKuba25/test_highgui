@@ -118,6 +118,7 @@ jobs:
             -o gtk/*:version=3 \
             -c:h tools.system.package_manager:mode=install \
             -c:h tools.system.package_manager:sudo=True \
+            -c:h tools.cmake.cmaketoolchain:extra_defines=["WITH_WAYLAND=OFF"] \
             --build=missing
 
       - name: Cmake
