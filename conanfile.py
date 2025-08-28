@@ -12,6 +12,7 @@ class IdentiqueRatioDemo(ConanFile):
         "opencv/4.9.0",
         "zxing-cpp/2.3.0",
         "tensorflow-lite/2.15.0",
+        "gtk/system",
     )
 
 

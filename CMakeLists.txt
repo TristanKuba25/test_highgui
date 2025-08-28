@@ -33,7 +33,7 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.29), libstdc++6 (>= 9)")
 
 install(TARGETS identique_ratio RUNTIME DESTINATION bin)
 
-install(FILES ${CMAKE_SOURCE_DIR}/models/model.tflite DESTINATION bin/models)
+install(FILES ${CMAKE_SOURCE_DIR}/models/ssd_mobilenet_v2.tflite DESTINATION bin/models)
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
 include(CPack)

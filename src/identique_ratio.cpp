@@ -29,7 +29,7 @@ int  args_height = 480;
 bool use_npu     = true;
 
 
-const std::string MODEL_PATH    = "ssd_mobilenet_v2.tflite";
+const std::string MODEL_PATH    = "models/ssd_mobilenet_v2.tflite";
 const std::string delegate_path = "/usr/lib/libvx_delegate.so";
 
 const float DETECTION_THRESHOLD = 0.3f;
@@ -305,7 +305,7 @@ int main(int argc,char* argv[])
         if(!cap.read(frame)||frame.empty()) break;
 
         frame = run_odt_and_draw_results_frame(frame);
-        //cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);
+        cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);
         cv::flip(frame,frame,1);
 
 
@@ -325,9 +325,9 @@ int main(int argc,char* argv[])
             fts.clear(); cpu.clear();
         }
 
-        /*cv::imshow("result",frame);
+        cv::imshow("result",frame);
         int k=cv::waitKey(1);
-        if(k=='q'||k==27) break;*/
+        if(k=='q'||k==27) break;
     }
     return 0;
 }
