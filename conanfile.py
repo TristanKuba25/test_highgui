@@ -57,6 +57,9 @@ class IdentiqueRatioDemo(ConanFile):
         "tensorflow-lite/*:ruy":      False,
         "tensorflow-lite/*:eigen":    False,
         "tensorflow-lite/*:fp16":     False,
+
+        "xkbcommon/*:with_wayland": False,
+        "xkbcommon/*:with_x11": False,
         "gtk/*:version": 3,
     }
 
