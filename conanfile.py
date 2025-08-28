@@ -60,9 +60,6 @@ class IdentiqueRatioDemo(ConanFile):
         "gtk/*:version": 3,
     }
 
-    def requirements(self):
-        self.requires("wayland/system",   override=True)
-        self.requires("xkbcommon/system", override=True)
     def layout(self):
         cmake_layout(self)
 
