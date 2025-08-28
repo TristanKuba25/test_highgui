@@ -27,6 +27,9 @@ class IdentiqueRatioDemo(ConanFile):
 
     default_options = {
         # --- global ---
+        "libpng/*:shared": True,
+        "zlib/*:shared": True,
+        "libjpeg-turbo/*:shared": True,
         "*:shared": False,
 
         # --- OpenCV ---
