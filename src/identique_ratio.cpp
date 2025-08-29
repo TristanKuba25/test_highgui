@@ -18,7 +18,7 @@
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model.h"
 
-#include "headers/anchors_v3.h" // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
+#include "../headers/anchors_v3.h" // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
 
 
 inline float sigmoidf(float x) { return 1.f / (1.f + std::exp(-x)); }
