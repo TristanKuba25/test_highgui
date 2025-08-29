@@ -20,9 +20,6 @@ jobs:
             set -e
             sudo dpkg --add-architecture arm64
             CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
-            sudo rm -f /etc/apt/sources.list
-            sudo rm -f /etc/apt/sources.list.d/*.list
-            sudo rm -f /etc/apt/sources.list.d/*.sources
             printf '%s\n' \
             'Types: deb' \
             "URIs: http://archive.ubuntu.com/ubuntu" \
@@ -31,6 +28,7 @@ jobs:
             'Architectures: amd64' \
             'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' \
             | sudo tee /etc/apt/sources.list.d/ubuntu-amd64.sources >/dev/null
+
             printf '%s\n' \
             'Types: deb' \
             "URIs: http://security.ubuntu.com/ubuntu" \
@@ -39,6 +37,7 @@ jobs:
             'Architectures: amd64' \
             'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' \
             | sudo tee /etc/apt/sources.list.d/ubuntu-amd64-security.sources >/dev/null
+
             printf '%s\n' \
             'Types: deb' \
             "URIs: http://ports.ubuntu.com/ubuntu-ports" \
@@ -47,6 +46,7 @@ jobs:
             'Architectures: arm64' \
             'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' \
             | sudo tee /etc/apt/sources.list.d/ubuntu-arm64.sources >/dev/null
+
             sudo apt-get clean
             sudo rm -rf /var/lib/apt/lists/*
             sudo apt-get update
