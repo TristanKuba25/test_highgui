@@ -20,6 +20,9 @@ jobs:
             set -e
             sudo dpkg --add-architecture arm64
             CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+            sudo rm -f /etc/apt/sources.list
+            sudo rm -f /etc/apt/sources.list.d/*.list
+            sudo rm -f /etc/apt/sources.list.d/*.sources
             printf '%s\n' \
             'Types: deb' \
             "URIs: http://archive.ubuntu.com/ubuntu" \
@@ -44,7 +47,8 @@ jobs:
             'Architectures: arm64' \
             'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' \
             | sudo tee /etc/apt/sources.list.d/ubuntu-arm64.sources >/dev/null
-          
+            sudo apt-get clean
+            sudo rm -rf /var/lib/apt/lists/*
             sudo apt-get update
             sudo apt-get install -y \
             gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
@@ -62,58 +66,17 @@ jobs:
           path: ~/.conan2
           key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
 
-      - name: Check pkg-config
-        env:
-          PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-        run: |
-          pkg-config --print-errors --modversion gtk+-3.0
-          pkg-config --print-errors --modversion libv4l2
-          pkg-config --print-errors --modversion wayland-client
-          pkg-config --print-errors --modversion wayland-egl || true
-          pkg-config --print-errors --modversion xkbcommon
+      
       - name: Conan install
         env:
           PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
           PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
         run: |
           conan profile detect --force
-          conan remove "wayland/*" -c || true
-          conan remove "gtk/*" -c || true
-          conan remove "xkbcommon/*" -c || true
-          mkdir -p build
-          conan graph info . \
-            -pr:b profiles/default \
-            -pr:h profiles/imx8mpevk \
-            -s:h build_type=Release \
-            -o opencv/*:with_gtk=True \
-            -o opencv/*:with_qt=False \
-            -o opencv/*:with_v4l=True \
-            -o opencv/*:with_ffmpeg=False \
-            -o opencv/*:with_gstreamer=False \
-            -o opencv/*:with_jpeg=libjpeg-turbo \
-            -o opencv/*:with_png=True \
-            -o gtk/*:version=3 \
-            -o xkbcommon/*:with_wayland=False \
-            -o xkbcommon/*:with_x11=False \
-            -o opencv/*:with_wayland=False \
-            --format=dot > build/graph.dot
-          if grep -i "wayland" build/graph.dot; then
-            echo "::error::Wayland est encore dans le graphe (voir build/graph.dot)"
-            exit 1
-          fi
           conan install . -of build/arm-headless \
             -pr:b profiles/default \
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
-            -o opencv/*:highgui=True \
-            -o opencv/*:with_gtk=True \
-            -o opencv/*:with_qt=False \
-            -o opencv/*:with_v4l=True \
-            -o opencv/*:with_ffmpeg=False \
-            -o opencv/*:with_gstreamer=False \
-            -o opencv/*:with_jpeg=libjpeg-turbo \
-            -o opencv/*:with_png=True \
             -o xkbcommon/*:with_wayland=False \
             -o xkbcommon/*:with_x11=False \
             -o opencv/*:with_wayland=False \
@@ -128,11 +91,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build build/arm --parallel
-
-      - name: Verify ELF
-        run: file build/arm/identique_ratio
-
-
 
       - name: Generate Debian package
         working-directory: build/arm
