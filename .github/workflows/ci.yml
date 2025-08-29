@@ -20,6 +20,10 @@ jobs:
             set -e
             sudo dpkg --add-architecture arm64
             CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+            sudo rm -f /etc/apt/sources.list
+            sudo rm -f /etc/apt/sources.list.d/*.list
+            sudo rm -f /etc/apt/sources.list.d/*.sources
+
             printf '%s\n' \
             'Types: deb' \
             "URIs: http://archive.ubuntu.com/ubuntu" \
@@ -45,10 +49,11 @@ jobs:
             'Components: main restricted universe multiverse' \
             'Architectures: arm64' \
             'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' \
-            | sudo tee /etc/apt/sources.list.d/ubuntu-arm64.sources >/dev/null
 
+            | sudo tee /etc/apt/sources.list.d/ubuntu-arm64.sources >/dev/null
             sudo apt-get clean
             sudo rm -rf /var/lib/apt/lists/*
+
             sudo apt-get update
             sudo apt-get install -y \
             gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
@@ -61,6 +66,7 @@ jobs:
             ninja-build cmake pkg-config fakeroot dpkg-dev
             python3 -m pip install --upgrade "conan~=2.2" ninja
             conan remote add --force conancenter https://center2.conan.io
+
       - uses: actions/cache@v4
         with:
           path: ~/.conan2
@@ -77,11 +83,13 @@ jobs:
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
             --build=missing
+
       - name: Cmake
         run: |
           cmake -S . -B build/arm -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=build/arm-headless/build/Release/generators/conan_toolchain.cmake \
             -DCMAKE_BUILD_TYPE=Release
+
       - name: Build
         run: cmake --build build/arm --parallel
 
@@ -89,6 +97,7 @@ jobs:
         working-directory: build/arm
         run: |
           cpack -G DEB -C Release
+
       - name: Upload Debian package
         uses: actions/upload-artifact@v4
         with:
