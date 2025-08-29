@@ -32,7 +32,7 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.29), libstdc++6 (>= 9)")
 
 install(TARGETS identique_ratio RUNTIME DESTINATION bin)
 
-#install(FILES ${CMAKE_SOURCE_DIR}/models/detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite DESTINATION bin/models)
+install(FILES ${CMAKE_SOURCE_DIR}/models/detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite DESTINATION bin/models)
 install(FILES ${CMAKE_SOURCE_DIR}/headers/anchors_v3.h DESTINATION bin/headers)
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
 include(CPack)
