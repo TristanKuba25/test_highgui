@@ -66,26 +66,6 @@ jobs:
           path: ~/.conan2
           key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
 
-
-      - name: Inspect pkg-config paths (ARM64)
-        shell: bash
-        env:
-          PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-        run: |
-          echo "PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR"
-          echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
-          echo "---- pc_path par défaut (si env non défini) ----"
-          pkg-config --variable=pc_path pkg-config
-          echo "---- Contenu /usr/lib/aarch64-linux-gnu/pkgconfig ----"
-          ls -1 /usr/lib/aarch64-linux-gnu/pkgconfig | head -n 50 || true
-          echo "---- Où pkg-config va lire pour GTK & libv4l2 ----"
-          pkg-config --debug --modversion gtk+-3.0 2>&1 | grep -E "Scanning directory|Reading file" || true
-          pkg-config --debug --modversion libv4l2   2>&1 | grep -E "Scanning directory|Reading file" || true
-          echo "---- Emplacement exact d'un .pc (ex: gtk+-3.0) ----"
-          pkg-config --variable pcfiledir gtk+-3.0 2>/dev/null || true
-
-
       - name: Conan install
         env:
           PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
