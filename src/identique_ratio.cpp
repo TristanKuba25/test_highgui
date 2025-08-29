@@ -18,7 +18,7 @@
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model.h"
 
-#include "anchors_v3.h" // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
+#include "headers/anchors_v3.h" // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
 
 
 inline float sigmoidf(float x) { return 1.f / (1.f + std::exp(-x)); }
@@ -109,7 +109,7 @@ Decoded decoder_v3(const float* boxes_raw, const float* scores_raw,
 
 int main(int argc, char** argv)
 {
-    std::string model_path = "detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite";
+    std::string model_path = "models/detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite";
     int cam_index = 3; // adjust if needed
     float conf_thresh = 0.70f;
     float iou_thresh  = 0.20f;
