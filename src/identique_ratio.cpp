@@ -384,13 +384,13 @@ int main(int argc, char** argv)
 
         // Draw and decode with ZXing
         for (const auto& d : kept) {
-            //cv::rectangle(frame, d.box, {0, 255, 0}, 2);
-            cv::putText(frame, "QR (" + std::to_string(d.score) + ")", d.box.tl(),
-                        cv::FONT_HERSHEY_SIMPLEX, 0.6, {0,255,0}, 2);
-
             // Crop ROI safely
             cv::Rect roiRect = d.box & cv::Rect(0, 0, imgW, imgH);
             if (roiRect.width < 2 || roiRect.height < 2) continue;
+
+            // Show the ROI
+            cv::rectangle(frame, d.box, {0, 255, 255}, 2);
+            cv::putText(frame, "QR (" + std::to_string(d.score) + "% )", d.box.tl(),cv::FONT_HERSHEY_SIMPLEX, 0.6, {0,255,0}, 2);
 
             cv::Mat roi = frame(roiRect).clone();
 
@@ -450,7 +450,7 @@ int main(int argc, char** argv)
         cv::flip(frame,frame,1);
 
         // Target aim overlay
-        cv::putText(frame,"Fit your Qr code in",{frame.cols/2-85,frame.rows/2-10},cv::FONT_HERSHEY_SIMPLEX,0.7,COLOR_AIM,2);
+        //cv::putText(frame,"Fit your Qr code in",{frame.cols/2-85,frame.rows/2-10},cv::FONT_HERSHEY_SIMPLEX,0.7,COLOR_AIM,2);
         int cx=frame.cols/2, cy=frame.rows/2, L=40,SZ=170;
         cv::line(frame,{cx-L,cy},{cx+L,cy},COLOR_AIM,2);
         cv::line(frame,{cx,cy-L},{cx,cy+L},COLOR_AIM,2);
