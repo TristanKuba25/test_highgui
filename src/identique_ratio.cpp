@@ -29,7 +29,7 @@
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 
-#include <headers/anchors_v3.h> // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
+#include <../headers/anchors_v3.h> // generated header with NUM_ANCHORS=2034 and anchors_v3[][]
 
 int  args_width  = 640;
 int  args_height = 480;
