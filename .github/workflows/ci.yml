@@ -77,7 +77,8 @@ jobs:
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
             --build=missing
-
+            
+           mkdir -p build/graphs
            conan graph info . \
             -pr:b profiles/default \
             -pr:h profiles/imx8mpevk \
