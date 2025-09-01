@@ -66,7 +66,7 @@ jobs:
           path: ~/.conan2
           key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.*','profiles/**') }}
 
-      - name: Conan install
+      - name: Conan install and graph
         env:
           PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
           PKG_CONFIG_LIBDIR: /usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
@@ -77,6 +77,13 @@ jobs:
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
             --build=missing
+
+           conan graph info . \
+            -pr:b profiles/default \
+            -pr:h profiles/imx8mpevk \
+            -s:h build_type=Release \
+            --format=html > build/graphs/conan-graph.html
+            
       - name: Cmake
         run: |
           cmake -S . -B build/arm -G Ninja \
@@ -94,3 +101,9 @@ jobs:
         with:
           name: identique_ratio-deb-${{ github.sha }}
           path: build/arm/*.deb
+
+      - name: Upload Conan graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: conan-graph-${{ github.sha }}
+          path: build/graphs/*
