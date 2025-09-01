@@ -36,7 +36,6 @@ int  args_height = 480;
 bool use_npu     = true;
 
 
-const std::string MODEL_PATH    = "ssd_mobilenet_v2.tflite";
 const std::string delegate_path = "/usr/lib/libvx_delegate.so";
 
 const float DETECTION_THRESHOLD = 0.3f;
@@ -214,7 +213,7 @@ void save_error(const cv::Mat& img, const std::string& prefix, const ZXing::Erro
 int main(int argc, char** argv)
 {
     
-    std::string model_path = "detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite";
+    std::string model_path = "models/detection-precision-npu-2025-08-05T06-13-14.743Z_channel_ptq_vvip.tflite";
     int cam_index = 3; // adjust if needed
     float conf_thresh = 0.70f;
     float iou_thresh  = 0.20f;
@@ -446,8 +445,17 @@ int main(int argc, char** argv)
             fts.clear(); cpu.clear();
         }
 
+
         cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);
         cv::flip(frame,frame,1);
+
+        // Target aim overlay
+        cv::putText(frame,"Fit your Qr code in",{frame.cols/2-85,frame.rows/2-10},cv::FONT_HERSHEY_SIMPLEX,0.7,COLOR_AIM,2);
+        int cx=frame.cols/2, cy=frame.rows/2, L=40,SZ=170;
+        cv::line(frame,{cx-L,cy},{cx+L,cy},COLOR_AIM,2);
+        cv::line(frame,{cx,cy-L},{cx,cy+L},COLOR_AIM,2);
+        cv::rectangle(frame,{cx-SZ,cy-SZ},{cx+SZ,cy+SZ},COLOR_AIM,2);
+
         cv::imshow("QR/Barcode Scanner", frame);
         if ((cv::waitKey(1) & 0xFF) == 'q') break;
     }
