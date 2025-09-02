@@ -62,8 +62,8 @@ jobs:
             libgcc-s1-arm64-cross libstdc++6-arm64-cross \
             libv4l-dev:arm64 \
             ninja-build cmake pkg-config fakeroot dpkg-dev
-            
-            python3 -m pip install --upgrade "conan~=2.2" ninja
+
+            python3 -m pip install --upgrade "conan~=2.2" "jinja2>=3,<4" cmake ninja
             conan remote add --force conancenter https://center2.conan.io
       - uses: actions/cache@v4
         with:
