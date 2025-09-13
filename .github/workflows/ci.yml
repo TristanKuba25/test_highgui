@@ -88,7 +88,12 @@ jobs:
             -pr:b profiles/default \
             -pr:h profiles/imx8mpevk \
             -s:h build_type=Release \
+            -o tensorflow-lite/*:with_eigen=False \
+            -o tensorflow-lite/*:with_xnnpack=False \
             --format=html > build/graphs/conan-graph.html
+
+            
+
             
       - name: Cmake
         run: |
